@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover,maximum-scale=1.0,user-scalable=no"/>
+<title>Happy Birthday Priya</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;700;900&family=Inter:wght@200;300;400&family=Great+Vibes&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+--gold:#d4a855;--gold-light:#f0d48a;--gold-dim:#8b7335;
+--rose:#c94073;--rose-soft:rgba(201,64,115,0.3);
+--bg-dark:#080808;--bg-deep:#0c0a0e;
+--text:#e8e0d4;--text-dim:rgba(232,224,212,0.5);
+}
+html{scroll-behavior:smooth;overflow-x:hidden;background:var(--bg-dark)}
+body{
+font-family:'Inter',sans-serif;color:var(--text);overflow-x:hidden;background:var(--bg-dark);
+-webkit-tap-highlight-color:transparent;touch-action:manipulation;
+-webkit-text-size-adjust:100%;text-size-adjust:100%;overscroll-behavior:none;
+}
+
+/* ===== LETTERBOX BARS ===== */
+.letterbox-top,.letterbox-bottom{
+position:fixed;left:0;right:0;height:6vh;z-index:9000;
+background:#000;pointer-events:none;
+}
+.letterbox-top{top:0}
+.letterbox-bottom{bottom:0}
+
+/* ===== FILM GRAIN ===== */
+.film-grain{
+position:fixed;top:-50%;left:-50%;width:200%;height:200%;
+z-index:8999;pointer-events:none;opacity:0.04;
+background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+animation:grainShift 0.3s steps(3) infinite;
+}
+@keyframes grainShift{0%{transform:translate(0,0)}33%{transform:translate(-2px,1px)}66%{transform:translate(1px,-1px)}}
+
+/* ===== VIGNETTE ===== */
+.vignette{
+position:fixed;top:0;left:0;width:100%;height:100%;
+z-index:8998;pointer-events:none;
+background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,0.7) 100%);
+}
+
+/* ===== LENS FLARE ===== */
+.lens-flare{
+position:fixed;top:0;left:0;width:100%;height:100%;z-index:8997;
+pointer-events:none;opacity:0;transition:opacity 2s ease;
+}
+.lens-flare.active{opacity:1}
+.lens-flare::before{
+content:'';position:absolute;top:10%;right:15%;
+width:300px;height:300px;border-radius:50%;
+background:radial-gradient(circle,rgba(212,168,85,0.15),transparent 70%);
+filter:blur(40px);animation:lensPulse 6s ease-in-out infinite;
+}
+.lens-flare::after{
+content:'';position:absolute;top:15%;right:20%;
+width:80px;height:80px;border-radius:50%;
+background:radial-gradient(circle,rgba(255,255,255,0.1),transparent);
+filter:blur(10px);
+}
+@keyframes lensPulse{0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
+
+/* ===== CINEMATIC INTRO ===== */
+#intro{
+position:fixed;top:0;left:0;width:100%;height:100%;height:100dvh;z-index:9500;
+background:#000;display:flex;align-items:center;justify-content:center;
+flex-direction:column;cursor:pointer;text-align:center;padding:60px 24px 90px;
+}
+#intro.hidden{opacity:0;visibility:hidden;pointer-events:none;transition:opacity 1.5s ease,visibility 1.5s ease}
+
+.intro-production{
+font-family:'Cinzel',serif;font-size:clamp(0.7rem,1.5vw,0.9rem);
+letter-spacing:12px;text-transform:uppercase;color:var(--gold-dim);
+opacity:0;margin-bottom:40px;
+}
+.intro-production.show{animation:textFadeIn 1.5s ease forwards 0.5s}
+
+.intro-presents{
+font-family:'Inter',sans-serif;font-size:clamp(0.6rem,1.2vw,0.8rem);
+letter-spacing:8px;text-transform:uppercase;color:var(--text-dim);
+opacity:0;margin-bottom:60px;
+}
+.intro-presents.show{animation:textFadeIn 1.5s ease forwards 1.5s}
+
+.intro-main-text{
+font-family:'Cinzel',serif;font-weight:900;
+font-size:clamp(2rem,6vw,5rem);
+color:var(--gold);text-align:center;
+opacity:0;letter-spacing:4px;
+text-shadow:0 0 60px rgba(212,168,85,0.3);
+}
+.intro-main-text.show{animation:cinematicReveal 2s cubic-bezier(0.16,1,0.3,1) forwards 2.5s}
+
+.intro-sub{
+font-family:'Cormorant Garamond',serif;font-size:clamp(0.9rem,2vw,1.3rem);
+font-style:italic;color:var(--text-dim);
+letter-spacing:3px;opacity:0;margin-top:20px;
+}
+.intro-sub.show{animation:textFadeIn 1.5s ease forwards 4s}
+
+.intro-click{
+position:absolute;bottom:8vh;
+font-family:'Inter',sans-serif;font-size:0.7rem;
+letter-spacing:6px;text-transform:uppercase;
+color:var(--gold-dim);opacity:0;
+animation:textFadeIn 1s ease forwards 5s,pulse 2s ease-in-out infinite 5s;
+}
+.intro-line{
+width:40px;height:1px;background:var(--gold-dim);margin:30px auto 0;
+opacity:0;animation:textFadeIn 1s ease forwards 5.5s;
+}
+@keyframes textFadeIn{to{opacity:1}}
+@keyframes pulse{0%,100%{opacity:0.4}50%{opacity:1}}
+@keyframes cinematicReveal{
+0%{opacity:0;transform:scale(1.5);filter:blur(20px)}
+100%{opacity:1;transform:scale(1);filter:blur(0)}
+}
+
+/* ===== MAIN CONTENT ===== */
+#main{opacity:0;transition:opacity 2s ease}
+#main.visible{opacity:1}
+
+/* ===== SCENE: HERO ===== */
+.scene{
+min-height:100vh;min-height:100svh;position:relative;display:flex;
+align-items:center;justify-content:center;
+overflow:hidden;
+}
+.scene-dark{background:var(--bg-dark)}
+
+/* Parallax layers */
+.parallax-container{
+position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden;
+}
+.parallax-layer{
+position:absolute;top:-10%;left:-5%;width:110%;height:120%;
+}
+.parallax-bg{
+background:radial-gradient(ellipse at 50% 40%,#1a1225 0%,#0d0a12 50%,#080808 100%);
+}
+.parallax-mid{
+background:radial-gradient(ellipse at 60% 50%,rgba(212,168,85,0.03) 0%,transparent 60%);
+}
+.parallax-fg{
+background:radial-gradient(ellipse at 40% 60%,rgba(201,64,115,0.02) 0%,transparent 50%);
+}
+
+/* Hero content */
+.hero-content{
+position:relative;z-index:10;text-align:center;
+width:100%;display:flex;flex-direction:column;align-items:center;
+padding:0 20px;
+}
+.hero-overline{
+font-family:'Inter',sans-serif;font-size:clamp(0.6rem,1vw,0.75rem);
+letter-spacing:10px;text-transform:uppercase;
+color:var(--gold-dim);margin-bottom:25px;
+}
+.hero-overline .line{
+display:inline-block;width:40px;height:1px;
+background:var(--gold-dim);vertical-align:middle;
+margin:0 15px;
+}
+.hero-title{
+font-family:'Cinzel',serif;font-weight:900;
+font-size:clamp(3rem,10vw,9rem);
+letter-spacing:clamp(2px,1vw,8px);
+color:var(--gold);
+line-height:1.25;padding:0 0.05em;
+text-shadow:0 0 80px rgba(212,168,85,0.2);
+}
+.hero-title .word{
+display:inline-block;opacity:0;
+transform:translateY(60px);
+transition:all 1.2s cubic-bezier(0.16,1,0.3,1);
+}
+.hero-title .word.show{opacity:1;transform:translateY(0)}
+
+.hero-name-line{
+font-family:'Great Vibes',cursive;
+font-size:clamp(3.5rem,13vw,11rem);
+color:var(--gold-light);
+line-height:1.35;margin:0;
+padding:0.15em 0.35em 0.25em;
+opacity:0;transform:scale(0.8);
+transition:all 1.5s cubic-bezier(0.34,1.56,0.64,1);
+text-shadow:0 0 100px rgba(212,168,85,0.4),0 0 200px rgba(212,168,85,0.2);
+text-rendering:optimizeLegibility;
+}
+.hero-name-line.show{opacity:1;transform:scale(1)}
+
+.hero-date-line{
+font-family:'Cormorant Garamond',serif;font-size:clamp(0.8rem,1.5vw,1.1rem);
+letter-spacing:6px;color:var(--text-dim);
+font-style:italic;margin-top:20px;
+opacity:0;transition:opacity 1.5s ease 2s;
+}
+.hero-date-line.show{opacity:1}
+
+/* Horizontal rule */
+.cinematic-hr{
+width:80px;height:1px;
+background:linear-gradient(90deg,transparent,var(--gold),transparent);
+margin:30px auto;opacity:0;
+transition:opacity 1.5s ease,transform 1.5s ease;
+transform:scaleX(0);
+}
+.cinematic-hr.show{opacity:1;transform:scaleX(1)}
+
+/* Scroll cue */
+.scroll-cue{
+position:absolute;bottom:9vh;left:50%;transform:translateX(-50%);
+text-align:center;z-index:10;opacity:0;
+transition:opacity 1s ease 3s;
+}
+.scroll-cue.show{opacity:1}
+.scroll-cue span{
+font-family:'Inter',sans-serif;font-size:0.6rem;
+letter-spacing:6px;text-transform:uppercase;color:var(--gold-dim);
+}
+.scroll-cue .mouse{
+width:20px;height:32px;border:1.5px solid var(--gold-dim);
+border-radius:10px;margin:10px auto 0;position:relative;
+}
+.scroll-cue .mouse::after{
+content:'';position:absolute;top:6px;left:50%;
+transform:translateX(-50%);width:2px;height:6px;
+background:var(--gold);border-radius:1px;
+animation:mouseScroll 2s ease-in-out infinite;
+}
+@keyframes mouseScroll{
+0%{transform:translateX(-50%) translateY(0);opacity:1}
+100%{transform:translateX(-50%) translateY(12px);opacity:0}
+}
+
+/* ===== SCENE: QUOTE INTERSTITIAL ===== */
+.scene-interstitial{
+min-height:60vh;display:flex;align-items:center;justify-content:center;
+background:var(--bg-dark);position:relative;
+}
+.interstitial-text{
+max-width:700px;text-align:center;padding:0 40px;
+}
+.interstitial-quote{
+font-family:'Cormorant Garamond',serif;
+font-size:clamp(1.3rem,3vw,2.2rem);
+font-weight:300;font-style:italic;
+line-height:1.8;color:var(--text);
+opacity:0;transform:translateY(40px);
+transition:all 1.2s cubic-bezier(0.16,1,0.3,1);
+}
+.interstitial-quote.show{opacity:1;transform:translateY(0)}
+.interstitial-quote .gold{color:var(--gold)}
+
+/* ===== SCENE: MESSAGE ===== */
+.scene-message{
+min-height:100vh;display:flex;align-items:center;justify-content:center;
+padding:120px 20px;
+background:linear-gradient(180deg,#080808 0%,#0f0c14 50%,#080808 100%);
+position:relative;
+}
+.message-frame{
+max-width:680px;width:100%;position:relative;padding:70px 60px;
+border:1px solid rgba(212,168,85,0.15);
+}
+.message-frame::before,.message-frame::after{
+content:'';position:absolute;width:30px;height:30px;
+border-color:var(--gold);border-style:solid;
+}
+.message-frame::before{top:-1px;left:-1px;border-width:1px 0 0 1px}
+.message-frame::after{bottom:-1px;right:-1px;border-width:0 1px 1px 0}
+
+.message-frame h2{
+font-family:'Cinzel',serif;font-weight:400;
+font-size:clamp(0.7rem,1.2vw,0.85rem);
+letter-spacing:10px;text-transform:uppercase;
+color:var(--gold);margin-bottom:40px;
+opacity:0;transform:translateY(30px);
+transition:all 1s ease 0.2s;
+}
+.message-frame h2.show{opacity:1;transform:translateY(0)}
+
+.message-frame p{
+font-family:'Cormorant Garamond',serif;
+font-size:clamp(1rem,2vw,1.25rem);
+line-height:2;color:var(--text);
+margin-bottom:25px;
+opacity:0;transform:translateY(20px);
+transition:all 1s ease;
+}
+.message-frame p.show{opacity:1;transform:translateY(0)}
+.message-frame p .em{color:var(--gold);font-weight:600;font-style:italic}
+
+/* ===== SCENE: FEATURES / QUALITIES ===== */
+.scene-qualities{
+padding:120px 20px;
+background:var(--bg-dark);position:relative;
+}
+.qualities-header{
+text-align:center;margin-bottom:80px;
+}
+.qualities-header h2{
+font-family:'Cinzel',serif;font-weight:700;
+font-size:clamp(1.5rem,4vw,2.8rem);
+color:var(--text);letter-spacing:2px;
+}
+.qualities-grid{
+max-width:1100px;margin:0 auto;
+display:grid;grid-template-columns:repeat(3,1fr);gap:40px;
+}
+.quality-item{
+text-align:center;padding:50px 30px;
+position:relative;
+opacity:0;transform:translateY(40px);
+transition:all 0.8s cubic-bezier(0.16,1,0.3,1);
+}
+.quality-item.show{opacity:1;transform:translateY(0)}
+.quality-item::before{
+content:'';position:absolute;top:0;left:50%;
+transform:translateX(-50%);width:40px;height:1px;
+background:var(--gold);opacity:0.3;
+}
+.quality-number{
+font-family:'Cinzel',serif;font-size:3rem;
+color:var(--gold);opacity:0.15;margin-bottom:20px;
+line-height:1;
+}
+.quality-item h3{
+font-family:'Cinzel',serif;font-weight:400;
+font-size:clamp(0.8rem,1.3vw,1rem);
+letter-spacing:6px;text-transform:uppercase;
+color:var(--gold);margin-bottom:15px;
+}
+.quality-item p{
+font-family:'Cormorant Garamond',serif;
+font-size:clamp(0.95rem,1.5vw,1.1rem);
+line-height:1.8;color:var(--text-dim);
+font-style:italic;
+}
+
+/* ===== SCENE: LETTER ===== */
+.scene-letter{
+min-height:100vh;display:flex;align-items:center;justify-content:center;
+padding:120px 20px;
+background:linear-gradient(180deg,#080808,#0a0810,#080808);
+}
+.letter-wrapper{
+max-width:600px;width:100%;position:relative;
+transform:rotate(-0.5deg);
+}
+.letter-paper{
+background:linear-gradient(135deg,#faf5ef,#f5ede0);
+padding:60px 50px 50px;position:relative;
+box-shadow:0 30px 100px rgba(0,0,0,0.6),
+inset 0 0 80px rgba(139,115,53,0.05);
+}
+.letter-paper::before{
+content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+background:repeating-linear-gradient(transparent,transparent 31px,rgba(139,115,53,0.08) 31px,rgba(139,115,53,0.08) 32px);
+pointer-events:none;
+}
+.letter-date{
+font-family:'Cormorant Garamond',serif;font-size:0.85rem;
+color:var(--gold-dim);margin-bottom:30px;letter-spacing:2px;
+}
+.letter-greeting{
+font-family:'Great Vibes',cursive;font-size:2.5rem;
+color:var(--rose);margin-bottom:25px;
+}
+.letter-body{
+font-family:'Cormorant Garamond',serif;font-size:1.05rem;
+line-height:2.2;color:#3d2b1f;
+}
+.letter-body .para{margin-bottom:18px}
+.letter-sign{
+font-family:'Great Vibes',cursive;font-size:1.8rem;
+color:var(--rose);text-align:right;margin-top:30px;
+}
+.letter-tape{
+position:absolute;width:70px;height:24px;
+background:rgba(212,168,85,0.25);
+top:-12px;border-radius:1px;
+}
+.letter-tape-l{left:50px;transform:rotate(-3deg)}
+.letter-tape-r{right:50px;transform:rotate(3deg)}
+
+/* ===== SCENE: WISHES BUBBLES ===== */
+.scene-wishes{
+padding:120px 20px;text-align:center;
+background:var(--bg-dark);
+}
+.wishes-title{
+font-family:'Cinzel',serif;font-weight:700;
+font-size:clamp(1.3rem,3vw,2rem);
+color:var(--text);letter-spacing:2px;
+margin-bottom:60px;
+}
+.wishes-grid{
+max-width:800px;margin:0 auto;
+display:flex;flex-wrap:wrap;gap:16px;justify-content:center;
+}
+.wish-pill{
+padding:14px 28px;border:1px solid rgba(212,168,85,0.2);
+font-family:'Cormorant Garamond',serif;
+font-size:1rem;color:var(--text);
+font-style:italic;letter-spacing:1px;
+transition:all 0.4s ease;
+opacity:0;transform:translateY(20px);
+cursor:default;
+}
+.wish-pill.show{opacity:1;transform:translateY(0)}
+.wish-pill:hover{
+border-color:var(--gold);
+background:rgba(212,168,85,0.05);
+color:var(--gold);
+}
+
+/* ===== SCENE: CLOSING ===== */
+.scene-closing{
+min-height:100vh;display:flex;align-items:center;justify-content:center;
+flex-direction:column;
+background:radial-gradient(ellipse at center,#12101a 0%,#080808 100%);
+position:relative;
+}
+.closing-heart{
+font-size:4rem;margin-bottom:30px;
+opacity:0;transition:all 1.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.closing-heart.show{opacity:1;transform:scale(1)}
+.closing-name{
+font-family:'Great Vibes',cursive;
+font-size:clamp(3.5rem,12vw,10rem);
+color:var(--gold);
+text-shadow:0 0 120px rgba(212,168,85,0.3);
+line-height:1.35;padding:0.15em 0.35em 0.25em;margin:10px 0;
+opacity:0;transform:scale(0.8);
+transition:all 1.5s cubic-bezier(0.34,1.56,0.64,1) 0.3s;
+}
+.closing-name.show{opacity:1;transform:scale(1)}
+.closing-subtitle{
+font-family:'Cormorant Garamond',serif;
+font-size:clamp(1rem,2vw,1.4rem);
+color:var(--text-dim);font-style:italic;
+letter-spacing:4px;margin-top:20px;
+opacity:0;transition:opacity 1.5s ease 0.8s;
+}
+.closing-subtitle.show{opacity:1}
+.closing-year{
+font-family:'Cinzel',serif;font-size:0.7rem;
+letter-spacing:10px;color:var(--gold-dim);
+margin-top:50px;
+opacity:0;transition:opacity 1.5s ease 1.2s;
+}
+.closing-year.show{opacity:1}
+
+/* ===== PROGRESS BAR ===== */
+.progress-bar{
+position:fixed;top:0;left:0;height:2px;
+background:linear-gradient(90deg,var(--gold),var(--rose));
+z-index:9001;transition:width 0.1s linear;width:0%;
+}
+
+/* ===== FADE-IN UTILITY ===== */
+.fi{opacity:0;transform:translateY(40px);transition:all 1s cubic-bezier(0.16,1,0.3,1)}
+.fi.show{opacity:1;transform:translateY(0)}
+.fi-d1{transition-delay:0.15s}.fi-d2{transition-delay:0.3s}
+.fi-d3{transition-delay:0.45s}.fi-d4{transition-delay:0.6s}
+
+/* ===== SCENE TRANSITION DIVIDER ===== */
+.scene-divider{
+height:1px;width:100%;
+background:linear-gradient(90deg,transparent 10%,rgba(212,168,85,0.2) 50%,transparent 90%);
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:900px){
+.qualities-grid{grid-template-columns:1fr;max-width:500px}
+.message-frame{padding:50px 30px}
+.letter-paper{padding:40px 28px}
+.scene-letter{padding:80px 14px}
+.scene-message{padding:80px 16px}
+.scene-qualities{padding:80px 16px}
+.scene-wishes{padding:80px 16px}
+.interstitial-text{padding:0 24px}
+.interstitial-quote{line-height:1.9}
+.wish-pill{flex:0 1 auto;text-align:center}
+.hero-overline{letter-spacing:6px}
+.hero-overline .line{margin:0 8px;width:24px}
+}
+@media(max-width:600px){
+.letterbox-top,.letterbox-bottom{height:3.5vh}
+.message-frame::before,.message-frame::after{display:none}
+.intro-production{letter-spacing:6px;margin-bottom:24px}
+.intro-presents{letter-spacing:5px;margin-bottom:40px}
+.intro-main-text{font-size:clamp(1.6rem,8vw,2.4rem);letter-spacing:2px}
+.intro-sub{font-size:1rem;letter-spacing:2px}
+.intro-click{bottom:6vh;letter-spacing:4px}
+.hero-title{font-size:clamp(2.2rem,13vw,3.2rem);letter-spacing:1px}
+.hero-name-line{font-size:clamp(3.2rem,16vw,5rem)}
+.hero-date-line{letter-spacing:3px;padding:0 20px}
+.message-frame{padding:40px 20px}
+.message-frame h2{letter-spacing:6px}
+.letter-paper{
+transform:rotate(0deg);
+padding:36px 22px 30px;
+box-shadow:0 20px 60px rgba(0,0,0,0.6),inset 0 0 40px rgba(139,115,53,0.05);
+}
+.letter-greeting{font-size:2rem}
+.letter-tape{width:50px;height:20px}
+.letter-tape-l{left:24px}
+.letter-tape-r{right:24px}
+.quality-item{padding:36px 20px}
+.closing-heart{font-size:3rem}
+.closing-name{font-size:clamp(3.4rem,18vw,5.5rem)}
+.closing-subtitle{letter-spacing:3px;font-size:1rem}
+.closing-year{letter-spacing:6px}
+.lens-flare::before{width:150px;height:150px;right:8%}
+}
+/* Small phones / very short heights (landscape) */
+@media(max-height:600px){
+.letterbox-top,.letterbox-bottom{height:2.5vh}
+#intro{padding:20px 16px 60px}
+.intro-production{margin-bottom:12px}
+.intro-presents{margin-bottom:20px}
+.intro-click{bottom:24px}
+.scroll-cue{bottom:10vh}
+}
+/* iOS notch / rounded corners safe area */
+@supports(padding:max(0px)){
+.letterbox-bottom{bottom:env(safe-area-inset-bottom)}
+.letterbox-top{top:env(safe-area-inset-top)}
+}
+/* Honor reduced-motion for battery & comfort */
+@media(prefers-reduced-motion:reduce){
+.film-grain{animation:none}
+.intro-main-text.show,
+.intro-production.show,
+.intro-presents.show,
+.intro-sub.show{animation:none;opacity:1}
+.parallax-layer{transform:none !important}
+}
+</style>
+</head>
+<body>
+
+<div class="letterbox-top"></div>
+<div class="letterbox-bottom"></div>
+<div class="film-grain"></div>
+<div class="vignette"></div>
+<div class="lens-flare" id="lensFlare"></div>
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- ===== INTRO ===== -->
+<div id="intro">
+<div class="intro-production" id="introProd">A Personal Production</div>
+<div class="intro-presents" id="introPresents">presents</div>
+<div class="intro-main-text" id="introMain">Happy Birthday</div>
+<div class="intro-sub" id="introSub">for someone who deserves the world</div>
+<div class="intro-click">Click anywhere to begin</div>
+<div class="intro-line"></div>
+</div>
+
+<!-- ===== MAIN ===== -->
+<div id="main">
+
+<!-- SCENE: HERO -->
+<section class="scene scene-dark" id="sceneHero">
+<div class="parallax-container">
+<div class="parallax-layer parallax-bg" data-speed="0.02"></div>
+<div class="parallax-layer parallax-mid" data-speed="0.05"></div>
+<div class="parallax-layer parallax-fg" data-speed="0.08"></div>
+</div>
+<div class="hero-content">
+<div class="hero-overline fi">September 2<span class="line"></span>2026</div>
+<h1 class="hero-title">
+<span class="word" style="transition-delay:0.3s">H</span><span class="word" style="transition-delay:0.38s">a</span><span class="word" style="transition-delay:0.46s">p</span><span class="word" style="transition-delay:0.54s">p</span><span class="word" style="transition-delay:0.62s">y</span>
+</h1>
+<div class="hero-name-line" id="heroName">Priya</div>
+<div class="cinematic-hr" id="heroHr"></div>
+<h1 class="hero-title" style="margin-top:5px">
+<span class="word" style="transition-delay:1.4s">B</span><span class="word" style="transition-delay:1.48s">i</span><span class="word" style="transition-delay:1.56s">r</span><span class="word" style="transition-delay:1.64s">t</span><span class="word" style="transition-delay:1.72s">h</span><span class="word" style="transition-delay:1.80s">d</span><span class="word" style="transition-delay:1.88s">a</span><span class="word" style="transition-delay:1.96s">y</span>
+</h1>
+<div class="hero-date-line" id="heroDate">The day the world became brighter</div>
+</div>
+<div class="scroll-cue" id="scrollCue">
+<span>Scroll</span>
+<div class="mouse"></div>
+</div>
+</section>
+
+<!-- INTERSTITIAL 1 -->
+<section class="scene scene-dark scene-interstitial">
+<div class="interstitial-text">
+<div class="interstitial-quote fi">
+"Some people arrive in your life<br>and make such a <span class="gold">beautiful impact</span><br>that words can never do them justice."
+</div>
+</div>
+</section>
+
+<div class="scene-divider"></div>
+
+<!-- SCENE: MESSAGE -->
+<section class="scene scene-dark scene-message">
+<div class="message-frame">
+<h2 class="fi">To Someone Special</h2>
+<p class="fi fi-d1">
+In a world that moves so fast, you have this <span class="em">extraordinary ability</span> to make everyone around you pause and feel something real.
+</p>
+<p class="fi fi-d2">
+Your <span class="em">presence</span> is felt before your words are heard. Your <span class="em">kindness</span> is louder than any applause. And your <span class="em">smile</span> &mdash; it has a way of making even the most ordinary day feel like a celebration.
+</p>
+<p class="fi fi-d3">
+Today isn't just another day on the calendar. Today is a reminder that the universe gave us someone truly <span class="em">irreplaceable</span>.
+</p>
+<p class="fi fi-d4">
+And that someone is <span class="em">you, Priya</span>.
+</p>
+</div>
+</section>
+
+<!-- INTERSTITIAL 2 -->
+<section class="scene scene-dark scene-interstitial">
+<div class="interstitial-text">
+<div class="interstitial-quote fi">
+"You don't just walk into a room and enter it.<br>You walk into a room and <span class="gold">change its entire energy</span>."
+</div>
+</div>
+</section>
+
+<div class="scene-divider"></div>
+
+<!-- SCENE: QUALITIES -->
+<section class="scene scene-dark scene-qualities">
+<div class="qualities-header fi">
+<h2>The Essence of Priya</h2>
+</div>
+<div class="qualities-grid">
+<div class="quality-item fi">
+<div class="quality-number">01</div>
+<h3>Radiance</h3>
+<p>There is a light in you that doesn't just shine &mdash; it illuminates every soul fortunate enough to cross your path.</p>
+</div>
+<div class="quality-item fi fi-d1">
+<div class="quality-number">02</div>
+<h3>Grace</h3>
+<p>You carry yourself with a quiet elegance that speaks volumes without uttering a single word.</p>
+</div>
+<div class="quality-item fi fi-d2">
+<div class="quality-number">03</div>
+<h3>Heart</h3>
+<p>Behind that beautiful smile lives a heart so pure, so full of love, it makes this world a gentler place.</p>
+</div>
+<div class="quality-item fi fi-d1">
+<div class="quality-number">04</div>
+<h3>Strength</h3>
+<p>You face every challenge with courage and emerge not just surviving, but thriving with grace.</p>
+</div>
+<div class="quality-item fi fi-d2">
+<div class="quality-number">05</div>
+<h3>Warmth</h3>
+<p>Your energy is magnetic. People are drawn to you not by chance, but by the gravity of your kindness.</p>
+</div>
+<div class="quality-item fi fi-d3">
+<div class="quality-number">06</div>
+<h3>Magic</h3>
+<p>There's something about you that defies explanation. Call it charm, call it magic &mdash; the world is better because you're in it.</p>
+</div>
+</div>
+</section>
+
+<!-- INTERSTITIAL 3 -->
+<section class="scene scene-dark scene-interstitial">
+<div class="interstitial-text">
+<div class="interstitial-quote fi">
+"A birthday is not just a celebration of another year.<br>It is a celebration of <span class="gold">every life you've touched</span>,<br>every heart you've warmed, every soul you've inspired."
+</div>
+</div>
+</section>
+
+<div class="scene-divider"></div>
+
+<!-- SCENE: WISHES -->
+<section class="scene scene-dark scene-wishes">
+<div class="wishes-title fi">Birthday Wishes</div>
+<div class="wishes-grid">
+<div class="wish-pill fi" style="transition-delay:0.1s">May every dream you dare to dream come true</div>
+<div class="wish-pill fi" style="transition-delay:0.2s">May your days be filled with endless joy</div>
+<div class="wish-pill fi" style="transition-delay:0.3s">May love follow you wherever you go</div>
+<div class="wish-pill fi" style="transition-delay:0.4s">May you always know how special you are</div>
+<div class="wish-pill fi" style="transition-delay:0.5s">May this year be your most beautiful chapter</div>
+<div class="wish-pill fi" style="transition-delay:0.6s">May happiness find you in every moment</div>
+<div class="wish-pill fi" style="transition-delay:0.7s">May you never stop shining your light</div>
+<div class="wish-pill fi" style="transition-delay:0.8s">May blessings surround you always</div>
+<div class="wish-pill fi" style="transition-delay:0.9s">May your heart always be at peace</div>
+<div class="wish-pill fi" style="transition-delay:1.0s">May the world give you back all the beauty you bring to it</div>
+</div>
+</section>
+
+<div class="scene-divider"></div>
+
+<!-- SCENE: LETTER -->
+<section class="scene scene-dark scene-letter">
+<div class="letter-wrapper fi">
+<div class="letter-paper">
+<div class="letter-tape letter-tape-l"></div>
+<div class="letter-tape letter-tape-r"></div>
+<div class="letter-date">September 2, 2026</div>
+<div class="letter-greeting">Dear Priya,</div>
+<div class="letter-body">
+<div class="para">I wanted to write you something real. Something that doesn't just say "Happy Birthday" but truly means it &mdash; down to every last word.</div>
+<div class="para">You are the kind of person who makes the world feel softer. The kind of person whose presence alone can turn an ordinary moment into a memory. And I hope you never forget how deeply you are valued, how sincerely you are appreciated, and how genuinely you are loved.</div>
+<div class="para">This new year of your life, I wish you adventures that take your breath away. I wish you laughter that echoes in your heart long after the moment has passed. I wish you peace that runs deep, love that knows no bounds, and joy that overflows.</div>
+<div class="para">You deserve every beautiful thing this world has to offer &mdash; and then some.</div>
+<div class="para">Happy Birthday, Priya. Here's to you.</div>
+</div>
+<div class="letter-sign">With heartfelt wishes &#10084;</div>
+</div>
+</div>
+</section>
+
+<!-- SCENE: CLOSING -->
+<section class="scene scene-dark scene-closing" id="sceneClosing">
+<div class="closing-heart" id="closingHeart">&#128156;</div>
+<div class="closing-name" id="closingName">Priya</div>
+<div class="closing-subtitle" id="closingSub">Happy Birthday, beautiful soul</div>
+<div class="closing-year" id="closingYear">MMXXVI</div>
+</section>
+
+</div>
+
+<!-- ===== FLOATING PARTICLES ===== -->
+<div id="floatingParticles" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1"></div>
+
+<!-- ===== CONFETTI CANVAS ===== -->
+<canvas id="confettiCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9500"></canvas>
+
+<script>
+// ===== INTRO SEQUENCE =====
+(function(){
+const intro=document.getElementById('intro');
+const main=document.getElementById('main');
+let started=false;
+
+// Intro text sequence (plays on page load)
+setTimeout(()=>document.getElementById('introProd').classList.add('show'),400);
+setTimeout(()=>document.getElementById('introPresents').classList.add('show'),1600);
+setTimeout(()=>document.getElementById('introMain').classList.add('show'),2600);
+setTimeout(()=>document.getElementById('introSub').classList.add('show'),4200);
+
+intro.addEventListener('click',()=>{
+if(started)return;
+started=true;
+// Fade out intro
+intro.classList.add('hidden');
+// Show main
+setTimeout(()=>{
+main.classList.add('visible');
+// Trigger hero animations
+setTimeout(animateHero,300);
+// Trigger confetti
+launchConfetti();
+// Show lens flare
+setTimeout(()=>document.getElementById('lensFlare').classList.add('active'),1000);
+// Start scroll observers only after intro
+initObservers();
+initClosing();
+},500);
+});
+
+function animateHero(){
+// Show overline
+document.querySelector('.hero-overline').classList.add('show');
+// Show "Happy" letters
+setTimeout(()=>{
+document.querySelectorAll('.hero-title .word').forEach(w=>w.classList.add('show'));
+},300);
+// Show name
+setTimeout(()=>{
+document.getElementById('heroName').classList.add('show');
+document.getElementById('heroHr').classList.add('show');
+},1200);
+// Show date
+setTimeout(()=>{
+document.getElementById('heroDate').classList.add('show');
+},2200);
+// Show scroll cue
+setTimeout(()=>{
+document.getElementById('scrollCue').classList.add('show');
+},3000);
+}
+
+// ===== SCROLL OBSERVER =====
+function initObservers(){
+const observer=new IntersectionObserver((entries)=>{
+entries.forEach(e=>{
+if(e.isIntersecting)e.target.classList.add('visible');
+});
+},{threshold:0.15,rootMargin:'0px 0px -50px 0px'});
+document.querySelectorAll('.fi').forEach(el=>observer.observe(el));
+}
+
+// ===== PARALLAX =====
+const isMobile=window.innerWidth<768;
+let ticking=false;
+window.addEventListener('scroll',()=>{
+if(!ticking){
+requestAnimationFrame(()=>{
+const y=window.scrollY;
+document.querySelectorAll('.parallax-layer').forEach(l=>{
+if(isMobile){l.style.transform='';return;}
+const speed=parseFloat(l.dataset.speed)||0.02;
+l.style.transform=`translateY(${y*speed}px)`;
+});
+// Progress bar
+const docH=document.documentElement.scrollHeight-window.innerHeight;
+const pct=(y/docH)*100;
+document.getElementById('progressBar').style.width=pct+'%';
+ticking=false;
+});
+ticking=true;
+}
+});
+
+// ===== CONFETTI =====
+function launchConfetti(){
+const c=document.getElementById('confettiCanvas');
+const ctx=c.getContext('2d');
+function resize(){c.width=window.innerWidth;c.height=window.innerHeight}
+resize();window.addEventListener('resize',resize);
+const colors=['#d4a855','#f0d48a','#c94073','#e8e0d4','#ff6b9d','#8b7335','#fff'];
+const count=isMobile?70:150;
+const pieces=[];
+for(let i=0;i<count;i++){
+pieces.push({
+x:Math.random()*c.width,y:Math.random()*c.height-c.height,
+w:5+Math.random()*6,h:3+Math.random()*5,
+color:colors[Math.floor(Math.random()*colors.length)],
+vx:(Math.random()-0.5)*3,
+vy:1.5+Math.random()*3,
+r:Math.random()*Math.PI*2,
+rs:(Math.random()-0.5)*0.15,
+opacity:1,life:0
+});
+}
+let active=true;
+function draw(){
+if(!active)return;
+ctx.clearRect(0,0,c.width,c.height);
+let anyAlive=false;
+pieces.forEach(p=>{
+if(p.opacity<=0)return;
+anyAlive=true;
+p.x+=p.vx;p.vy+=0.04;p.y+=p.vy;p.r+=p.rs;
+p.life++;
+if(p.life>150)p.opacity-=0.008;
+ctx.save();
+ctx.globalAlpha=Math.max(0,p.opacity);
+ctx.translate(p.x,p.y);ctx.rotate(p.r);
+ctx.fillStyle=p.color;
+ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+ctx.restore();
+});
+if(anyAlive)requestAnimationFrame(draw);
+else ctx.clearRect(0,0,c.width,c.height);
+}
+draw();
+}
+
+// ===== FLOATING PARTICLES =====
+(function(){
+const c=document.getElementById('floatingParticles');
+const cols=['rgba(212,168,85,','rgba(201,64,115,','rgba(232,224,212,'];
+const pCount=isMobile?10:20;
+for(let i=0;i<pCount;i++){
+const p=document.createElement('div');
+const sz=1+Math.random()*3;
+const col=cols[Math.floor(Math.random()*cols.length)];
+Object.assign(p.style,{
+position:'absolute',borderRadius:'50%',
+width:sz+'px',height:sz+'px',
+background:col+(0.2+Math.random()*0.4)+')',
+left:Math.random()*100+'%',
+top:Math.random()*100+'%',
+animation:'floatUp '+(15+Math.random()*20)+'s linear infinite',
+animationDelay:-Math.random()*20+'s'
+});
+c.appendChild(p);
+}
+const style=document.createElement('style');
+style.textContent='@keyframes floatUp{0%{transform:translateY(100vh) translateX(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(-10vh) translateX('+(Math.random()>0.5?'':'-')+'50px);opacity:0}}';
+document.head.appendChild(style);
+})();
+
+// ===== CURSOR GLOW (desktop only) =====
+if(window.innerWidth>768){
+const glow=document.createElement('div');
+Object.assign(glow.style,{
+position:'fixed',width:'300px',height:'300px',borderRadius:'50%',
+background:'radial-gradient(circle,rgba(212,168,85,0.06),transparent 70%)',
+pointerEvents:'none',zIndex:'8996',
+transform:'translate(-50%,-50%)',
+transition:'left 0.3s ease,top 0.3s ease'
+});
+document.body.appendChild(glow);
+document.addEventListener('mousemove',e=>{
+glow.style.left=e.clientX+'px';
+glow.style.top=e.clientY+'px';
+});
+}
+
+// ===== CLOSING ANIMATION =====
+function initClosing(){
+const closingObs=new IntersectionObserver((entries)=>{
+entries.forEach(e=>{
+if(e.isIntersecting){
+document.getElementById('closingHeart').classList.add('show');
+document.getElementById('closingName').classList.add('show');
+document.getElementById('closingSub').classList.add('show');
+document.getElementById('closingYear').classList.add('show');
+}
+});
+},{threshold:0.3});
+closingObs.observe(document.getElementById('sceneClosing'));
+}
+})();
+</script>
+</body>
+</html>
