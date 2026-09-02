@@ -24,7 +24,7 @@ font-family:'Inter',sans-serif;color:var(--text);overflow-x:clip;overflow-y:visi
 
 /* ===== LETTERBOX BARS ===== */
 .letterbox-top,.letterbox-bottom{
-position:fixed;left:0;right:0;height:6vh;z-index:9000;
+position:fixed;left:0;right:0;height:6vh;z-index:9600;
 background:#000;pointer-events:none;
 }
 .letterbox-top{top:0}
@@ -66,61 +66,69 @@ filter:blur(10px);
 }
 @keyframes lensPulse{0%,100%{opacity:0.5;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
 
-/* ===== CINEMATIC INTRO ===== */
+/* ===== TEARABLE INTRO ===== */
 #intro{
 position:fixed;top:0;left:0;width:100%;height:100%;height:100dvh;z-index:9500;
-background:#000;display:flex;align-items:center;justify-content:center;
-flex-direction:column;cursor:pointer;text-align:center;padding:60px 24px 90px;
+background:radial-gradient(ellipse at center,#151020 0%,#080808 100%);
+cursor:crosshair;overflow:hidden;
 }
 #intro.hidden{opacity:0;visibility:hidden;pointer-events:none;transition:opacity 1.5s ease,visibility 1.5s ease}
 
-.intro-production{
-font-family:'Cinzel',serif;font-size:clamp(0.7rem,1.5vw,0.9rem);
-letter-spacing:12px;text-transform:uppercase;color:var(--gold-dim);
-opacity:0;margin-bottom:40px;
+/* Content revealed behind the cloth */
+#tear-reveal{
+position:absolute;inset:0;z-index:1;pointer-events:none;
+display:flex;flex-direction:column;align-items:center;justify-content:center;
+text-align:center;padding:0 20px;
 }
-.intro-production.show{animation:textFadeIn 1.5s ease forwards 0.5s}
-
-.intro-presents{
-font-family:'Inter',sans-serif;font-size:clamp(0.6rem,1.2vw,0.8rem);
-letter-spacing:8px;text-transform:uppercase;color:var(--text-dim);
-opacity:0;margin-bottom:60px;
+.tear-overline{
+font-family:'Cinzel',serif;font-size:clamp(0.6rem,1.2vw,0.8rem);
+letter-spacing:8px;text-transform:uppercase;color:var(--gold-dim);
+opacity:0;transform:translateY(20px);transition:all 1s ease;
+margin-bottom:20px;
 }
-.intro-presents.show{animation:textFadeIn 1.5s ease forwards 1.5s}
-
-.intro-main-text{
+.tear-title{
 font-family:'Cinzel',serif;font-weight:900;
-font-size:clamp(2rem,6vw,5rem);
-color:var(--gold);text-align:center;
-opacity:0;letter-spacing:4px;
-text-shadow:0 0 60px rgba(212,168,85,0.3);
+font-size:clamp(2.4rem,9vw,7rem);
+letter-spacing:clamp(2px,1vw,8px);
+color:var(--gold);line-height:1.25;padding:0 0.05em;
+text-shadow:0 0 80px rgba(212,168,85,0.25);
+opacity:0;transform:translateY(30px);transition:all 1s cubic-bezier(0.16,1,0.3,1);
 }
-.intro-main-text.show{animation:cinematicReveal 2s cubic-bezier(0.16,1,0.3,1) forwards 2.5s}
-
-.intro-sub{
-font-family:'Cormorant Garamond',serif;font-size:clamp(0.9rem,2vw,1.3rem);
-font-style:italic;color:var(--text-dim);
-letter-spacing:3px;opacity:0;margin-top:20px;
+.tear-name{
+font-family:'Great Vibes',cursive;
+font-size:clamp(3.5rem,13vw,11rem);
+color:var(--gold-light);line-height:1.35;
+padding:0.1em 0.35em 0.2em;margin:0;
+text-shadow:0 0 100px rgba(212,168,85,0.45),0 0 200px rgba(212,168,85,0.2);
+opacity:0;transform:scale(0.85);transition:all 1.4s cubic-bezier(0.34,1.56,0.64,1);
 }
-.intro-sub.show{animation:textFadeIn 1.5s ease forwards 4s}
+.tear-sub{
+font-family:'Cormorant Garamond',serif;font-style:italic;
+font-size:clamp(0.85rem,1.8vw,1.2rem);letter-spacing:4px;
+color:var(--text-dim);margin-top:16px;
+opacity:0;transform:translateY(20px);transition:all 1s ease .2s;
+}
+#tear-reveal .a.show{opacity:1;transform:translateY(0) scale(1)}
 
-.intro-click{
-position:absolute;bottom:8vh;
+/* The cloth canvas */
+#tearCanvas{
+position:absolute;inset:0;width:100%;height:100%;z-index:2;
+touch-action:none;cursor:crosshair;
+transition:opacity 0.9s ease;
+}
+#intro.torn-open #tearCanvas{opacity:0;pointer-events:none}
+
+.tear-hint{
+position:absolute;bottom:9vh;left:0;right:0;text-align:center;
+z-index:3;pointer-events:none;
 font-family:'Inter',sans-serif;font-size:0.7rem;
-letter-spacing:6px;text-transform:uppercase;
-color:var(--gold-dim);opacity:0;
-animation:textFadeIn 1s ease forwards 5s,pulse 2s ease-in-out infinite 5s;
+letter-spacing:5px;text-transform:uppercase;
+color:var(--gold-dim);
+animation:introPulse 3s ease-in-out infinite;
+transition:opacity 0.4s ease;
 }
-.intro-line{
-width:40px;height:1px;background:var(--gold-dim);margin:30px auto 0;
-opacity:0;animation:textFadeIn 1s ease forwards 5.5s;
-}
-@keyframes textFadeIn{to{opacity:1}}
-@keyframes pulse{0%,100%{opacity:0.4}50%{opacity:1}}
-@keyframes cinematicReveal{
-0%{opacity:0;transform:scale(1.5);filter:blur(20px)}
-100%{opacity:1;transform:scale(1);filter:blur(0)}
-}
+#intro.torn-open .tear-hint{opacity:0}
+@keyframes introPulse{0%,100%{opacity:0.45}50%{opacity:1}}
 
 /* ===== MAIN CONTENT ===== */
 #main{opacity:0;transition:opacity 2s ease}
@@ -496,11 +504,11 @@ background:linear-gradient(90deg,transparent 10%,rgba(212,168,85,0.2) 50%,transp
 @media(max-width:600px){
 .letterbox-top,.letterbox-bottom{height:3.5vh}
 .message-frame::before,.message-frame::after{display:none}
-.intro-production{letter-spacing:6px;margin-bottom:24px}
-.intro-presents{letter-spacing:5px;margin-bottom:40px}
-.intro-main-text{font-size:clamp(1.6rem,8vw,2.4rem);letter-spacing:2px}
-.intro-sub{font-size:1rem;letter-spacing:2px}
-.intro-click{bottom:6vh;letter-spacing:4px}
+.tear-hint{letter-spacing:3px;bottom:6vh;font-size:0.6rem}
+.tear-overline{letter-spacing:5px}
+.tear-title{font-size:clamp(1.9rem,10vw,3rem)}
+.tear-name{font-size:clamp(3rem,15vw,4.8rem)}
+.tear-sub{letter-spacing:3px}
 .hero-title{font-size:clamp(2.2rem,13vw,3.2rem);letter-spacing:1px}
 .hero-name-line{font-size:clamp(3.2rem,16vw,5rem)}
 .hero-date-line{letter-spacing:3px;padding:0 20px}
@@ -542,8 +550,10 @@ box-shadow:0 20px 60px rgba(0,0,0,0.6),inset 0 0 40px rgba(139,115,53,0.05);
 .intro-main-text.show,
 .intro-production.show,
 .intro-presents.show,
-.intro-sub.show{animation:none;opacity:1}
+.intro-sub.show,
+#tear-reveal .a.show{animation:none;opacity:1}
 .parallax-layer{transform:none !important}
+#intro{animation:none}
 }
 </style>
 </head>
@@ -556,14 +566,17 @@ box-shadow:0 20px 60px rgba(0,0,0,0.6),inset 0 0 40px rgba(139,115,53,0.05);
 <div class="lens-flare" id="lensFlare"></div>
 <div class="progress-bar" id="progressBar"></div>
 
-<!-- ===== INTRO ===== -->
+<!-- ===== INTRO: TEARABLE CLOTH ===== -->
 <div id="intro">
-<div class="intro-production" id="introProd">A Personal Production</div>
-<div class="intro-presents" id="introPresents">presents</div>
-<div class="intro-main-text" id="introMain">Happy Birthday</div>
-<div class="intro-sub" id="introSub">for someone who deserves the world</div>
-<div class="intro-click">Click anywhere to begin</div>
-<div class="intro-line"></div>
+<div id="tear-reveal">
+<div class="tear-overline a">September 2 &middot; 2026</div>
+<div class="tear-title a">Happy</div>
+<div class="tear-name a">Priya</div>
+<div class="tear-title a" style="transition-delay:.15s">Birthday</div>
+<div class="tear-sub a">the day the world became brighter</div>
+</div>
+<canvas id="tearCanvas"></canvas>
+<div class="tear-hint" id="tearHint">drag anywhere to tear open your surprise</div>
 </div>
 
 <!-- ===== MAIN ===== -->
@@ -740,38 +753,248 @@ And that someone is <span class="em">you, Priya</span>.
 <!-- ===== CONFETTI CANVAS ===== -->
 <canvas id="confettiCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9500"></canvas>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 <script>
-// ===== INTRO SEQUENCE =====
+// ===== TEARABLE INTRO =====
 (function(){
 const intro=document.getElementById('intro');
 const main=document.getElementById('main');
-let started=false;
+const hint=document.getElementById('tearHint');
+const isMobile=window.innerWidth<768;
+let started=false,finished=false;
 
-// Intro text sequence (plays on page load)
-setTimeout(()=>document.getElementById('introProd').classList.add('show'),400);
-setTimeout(()=>document.getElementById('introPresents').classList.add('show'),1600);
-setTimeout(()=>document.getElementById('introMain').classList.add('show'),2600);
-setTimeout(()=>document.getElementById('introSub').classList.add('show'),4200);
+// graceful fallback if Matter.js fails or user prefers reduced motion
+if(!window.Matter||matchMedia('(prefers-reduced-motion: reduce)').matches){
+setTimeout(()=>document.querySelectorAll('#tear-reveal .a').forEach((el,i)=>setTimeout(()=>el.classList.add('show'),i*250)),400);
+const tc=document.getElementById('tearCanvas');if(tc)tc.style.display='none';
+intro.style.cursor='pointer';
+intro.addEventListener('click',()=>finishReveal());
+return;
+}
 
-intro.addEventListener('click',()=>{
-if(started)return;
-started=true;
-// Fade out intro
-intro.classList.add('hidden');
-// Show main
+function finishReveal(){
+if(finished)return;finished=true;
+if(typeof fallbackTimer!=='undefined')clearTimeout(fallbackTimer);
+try{Matter.Runner.stop(runner);}catch(e){}
+intro.classList.add('torn-open');
 setTimeout(()=>{
-main.classList.add('visible');
-// Trigger hero animations
-setTimeout(animateHero,300);
-// Trigger confetti
+document.querySelectorAll('#tear-reveal .a').forEach((el,i)=>setTimeout(()=>el.classList.add('show'),i*250));
+},350);
 launchConfetti();
-// Show lens flare
+setTimeout(()=>{
+if(started)return;started=true;
+intro.classList.add('hidden');
+main.classList.add('visible');
+setTimeout(animateHero,300);
 setTimeout(()=>document.getElementById('lensFlare').classList.add('active'),1000);
-// Start scroll observers only after intro
 initObservers();
 initClosing();
-},500);
+},2900);
+}
+
+const engine=Matter.Engine.create();
+const world=engine.world;
+engine.gravity.y=0.12;
+
+const canvas=document.getElementById('tearCanvas');
+const render=Matter.Render.create({
+canvas,engine,
+options:{
+wireframes:true,
+background:'transparent',
+pixelRatio:Math.min(window.devicePixelRatio||1,2),
+constraintStrokeStyle:isMobile?'rgba(224,214,200,0.55)':'rgba(212,168,85,0.7)',
+constraintLineWidth:isMobile?1.2:1.5,
+bodyStrokeStyle:'rgba(240,212,138,0.10)',
+lineColors:{constraintStroke:isMobile?'rgba(224,214,200,0.55)':'rgba(212,168,85,0.7)'}
+}
 });
+
+let totalCloth=0,tornCount=0;
+const tearLines=[];
+const cutMarks=[];
+let runner=null;
+
+function buildCloth(){
+Matter.Composite.clear(world,false);
+tearLines.length=0;cutMarks.length=0;tornCount=0;totalCloth=0;
+const W=window.innerWidth,H=window.innerHeight;
+canvas.width=W;canvas.height=H;
+render.options.width=W;render.options.height=H;
+
+const spacing=window.innerWidth<600?38:22;
+const cols=Math.max(3,Math.ceil(W/spacing));
+const rows=Math.max(3,Math.ceil(H/spacing));
+const stepX=W/(cols-1),stepY=H/(rows-1);
+const group=Matter.Body.nextGroup(true);
+
+const bodies=[];
+const pins=[];
+for(let c=0;c<cols;c++){
+const x=c*stepX;
+// top + bottom fixed anchors so the curtain stays pinned
+pins.push(Matter.Bodies.rectangle(x,3,5,5,{isStatic:true,collisionFilter:{group},render:{visible:false}}));
+pins.push(Matter.Bodies.rectangle(x,H-3,5,5,{isStatic:true,collisionFilter:{group},render:{visible:false}}));
+}
+for(let r=0;r<rows;r++){
+for(let c=0;c<cols;c++){
+const idx=r*cols+c;
+if(r===0||r===rows-1)continue; // middle rows only as fabric bodies
+bodies.push(Matter.Bodies.rectangle(c*stepX,r*stepY,4,4,{
+collisionFilter:{group},friction:0.0001,density:0.012,
+chamfer:{radius:2},render:{visible:false}
+}));
+}
+}
+// map: only rows 1..rows-2 are fabric. Fabric row index fr = r-1
+const nRows=rows-2;
+const fabric=[];
+for(let fr=0;fr<nRows;fr++){
+for(let c=0;c<cols;c++){
+fabric.push(bodies[fr*cols+c]);
+}
+}
+const constraints=[];
+function link(a,b,len,label){
+constraints.push(Matter.Constraint.create({bodyA:a,bodyB:b,length:len,stiffness:0.5,label}));
+}
+for(let fr=0;fr<nRows;fr++){
+for(let c=0;c<cols;c++){
+const b=fabric[fr*cols+c];
+if(c<cols-1)link(b,fabric[fr*cols+c+1],stepX,'cloth');
+if(fr<nRows-1)link(b,fabric[(fr+1)*cols+c],stepY,'cloth');
+if(fr===0)link(b,pins[c],stepX*0.35,'pin');
+if(fr===nRows-1)link(b,pins[cols+c],stepY*0.35,'pin');
+}
+}
+totalCloth=constraints.reduce((a,c)=>a+(c.label==='cloth'?1:0),0);
+Matter.Composite.add(world,[...pins,...fabric,...constraints]);
+if(typeof mouseConstraint!=='undefined')Matter.Composite.add(world,mouseConstraint);
+}
+
+function bladeCut(x,y,r){
+const remove=[];
+Matter.Composite.allConstraints(world).forEach(c=>{
+if(c.label!=='cloth')return;
+const mx=(c.bodyA.position.x+c.bodyB.position.x)/2;
+const my=(c.bodyA.position.y+c.bodyB.position.y)/2;
+if((mx-x)*(mx-x)+(my-y)*(my-y)<r*r){
+remove.push(c);
+const dx=c.bodyB.position.x-c.bodyA.position.x;
+const dy=c.bodyB.position.y-c.bodyA.position.y;
+tearLines.push({x1:c.bodyA.position.x,y1:c.bodyA.position.y,x2:c.bodyB.position.x,y2:c.bodyB.position.y,life:1});
+}
+});
+remove.forEach(c=>{
+if(Matter.Composite.allConstraints(world).indexOf(c)>-1){
+Matter.Composite.remove(world,c,true);
+tornCount++;
+}
+});
+}
+
+// tear stretched cloth constraints every frame
+Matter.Events.on(engine,'afterUpdate',()=>{
+if(finished)return;
+const remove=[];
+Matter.Composite.allConstraints(world).forEach(c=>{
+if(c.label!=='cloth')return;
+const ax=c.bodyA.position.x,ay=c.bodyA.position.y;
+const bx=c.bodyB.position.x,by=c.bodyB.position.y;
+const dx=bx-ax,dy=by-ay;
+const d=Math.sqrt(dx*dx+dy*dy);
+const restLen=c.length||22;
+if(d>restLen*1.5){
+remove.push(c);
+tearLines.push({x1:ax,y1:ay,x2:bx,y2:by,life:1});
+}
+});
+remove.forEach(c=>{
+Matter.Composite.remove(world,c,true);
+tornCount++;
+});
+// dragging blade
+if(mouse.isDown){
+const cutR=window.innerWidth<600?30:26;
+const mx=mouse.position.x,my=mouse.position.y;
+if(lastMouse.set){
+const dx=mx-lastMouse.x,dy=my-lastMouse.y;
+const steps=Math.max(1,Math.ceil(Math.hypot(dx,dy)/6));
+for(let s=1;s<=steps;s++){
+const px=lastMouse.x+dx*s/steps,py=lastMouse.y+dy*s/steps;
+bladeCut(px,py,cutR);
+cutMarks.push({x:px,y:py,life:0.5,r:cutR});
+}
+}
+lastMouse={x:mx,y:my,set:true};
+}else lastMouse.set=false;
+// progress
+const pct=totalCloth?tornCount/totalCloth:0;
+hint.textContent=pct>0.03?'keep tearing...':'drag anywhere to tear';
+if(!finished&&pct>=0.08)finishReveal();
+});
+
+// ===== mouse + drag =====
+const mouse=Matter.Mouse.create(canvas);
+const mouseConstraint=Matter.MouseConstraint.create(engine,{mouse,constraint:{stiffness:0.1,length:0,render:{visible:false}}});
+Matter.Composite.add(world,mouseConstraint);
+render.mouse=mouse;
+let lastMouse={x:0,y:0,set:false};
+
+// ===== draw tear streaks + cut sparkles =====
+Matter.Events.on(render,'afterRender',()=>{
+const ctx=render.context;if(!ctx)return;
+tearLines.forEach(l=>{
+if(l.life<=0)return;
+ctx.save();
+ctx.globalAlpha=Math.min(0.5,l.life);
+ctx.strokeStyle='rgba(240,212,138,1)';
+ctx.lineWidth=2;
+ctx.beginPath();ctx.moveTo(l.x1,l.y1);ctx.lineTo(l.x2,l.y2);ctx.stroke();
+ctx.restore();
+l.life-=0.4;
+});
+for(let i=tearLines.length-1;i>=0;i--)if(tearLines[i].life<=0)tearLines.splice(i,1);
+cutMarks.forEach(m=>{
+if(m.life<=0)return;
+ctx.save();
+ctx.globalAlpha=Math.max(0,m.life);
+ctx.strokeStyle='rgba(255,255,255,0.7)';
+ctx.lineWidth=1.5;
+ctx.beginPath();ctx.arc(m.x,m.y,m.r*(1-Math.max(0,m.life)),0,Math.PI*2);ctx.stroke();
+ctx.restore();
+m.life-=0.015;
+});
+for(let i=cutMarks.length-1;i>=0;i--)if(cutMarks[i].life<=0)cutMarks.splice(i,1);
+});
+
+// ===== tap anywhere = burst rip =====
+let tap=null;
+canvas.addEventListener('pointerdown',e=>{tap={x:e.clientX,y:e.clientY,t:Date.now()};},{passive:true});
+canvas.addEventListener('pointerup',e=>{
+if(!tap)return;
+if(Date.now()-tap.t<260&&Math.hypot(e.clientX-tap.x,e.clientY-tap.y)<14){
+bladeCut(tap.x,tap.y,36);
+cutMarks.push({x:tap.x,y:tap.y,life:0.6,r:36});
+for(let i=0;i<10;i++){
+const a=(i/10)*Math.PI*2;
+bladeCut(tap.x+Math.cos(a)*26,tap.y+Math.sin(a)*26,12);
+}
+}
+tap=null;
+},{passive:true});
+
+// ===== start physics =====
+buildCloth();
+runner=Matter.Runner.create();
+Matter.Runner.run(runner,engine);
+Matter.Runner.run(runner,render);
+
+// rebuild on orientation change
+window.addEventListener('resize',()=>{if(!finished)buildCloth();});
+
+// never tears? auto reveal after 30s
+const fallbackTimer=setTimeout(()=>{if(!finished)finishReveal();},30000);
 
 function animateHero(){
 // Show overline
@@ -806,7 +1029,6 @@ document.querySelectorAll('.fi').forEach(el=>observer.observe(el));
 }
 
 // ===== PARALLAX =====
-const isMobile=window.innerWidth<768;
 let ticking=false;
 window.addEventListener('scroll',()=>{
 if(!ticking){
